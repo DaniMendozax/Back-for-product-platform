@@ -2,6 +2,7 @@ const { v4: uuidv4 } = require('uuid');
 const Purchase = require('../model/purchase.model');
 const Product = require('../model/product.model');
 const Users = require('../model/users.model');
+const purchaseFinder = require('./utilities/purchaseFinder');
 
 class CustomerPurchase {
 
@@ -54,31 +55,7 @@ class CustomerPurchase {
             },
         });
         if(purchaseResponse) {
-            let purchaseTotalPrice = 0;
-            const productsList = await Promise.all(purchaseResponse.map(async (item) => {
-                const product = await Product.findOne({
-                    where: {
-                        Nombre: item.dataValues.Product_name,
-                    },
-                });
-                const list = {
-                    producto: item.dataValues.Product_name,
-                    cantidad: item.dataValues.Quantity,
-                    precioPorUnidad: product.dataValues.Precio,
-                    precioTotal: item.dataValues.Quantity * product.dataValues.Precio
-                }
-                purchaseTotalPrice += list.precioTotal;
-                return list;
-            }));
-            
-            const purchaseAsFactura = {
-                fecha: purchaseResponse[0].dataValues.createdAt,
-                cliente: purchaseResponse[0].dataValues.Username,
-                productos: productsList,
-                precioTotal: purchaseTotalPrice
-            }
-
-            await res.status(200).json({
+            res.status(200).json({
                 ok: true,
                 status: 200,
                 body: purchaseAsFactura
@@ -98,8 +75,7 @@ class CustomerPurchase {
     async getAllPurchases(req, res) {
         const purchaseResponse = await Purchase.findAll();
         if(purchaseResponse && purchaseResponse.length > 0) {
-            const groupedPurchases = purchaseResponse.groupBy(purchaseResponse, purchase => purchase.dataValues.PurchaseId);
-            console.log(groupedPurchases)
+            
             res.status(200).json({
                 ok: true,
                 status: 200,
