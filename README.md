@@ -13,19 +13,19 @@ Asegúrate de tener Node.js y npm instalados en tu sistema.Preferible las versio
 
 Las siguientes bibliotecas se utilizan como dependencias:
   
-  bcrypt v5.1.1
-  
-  express v4.18.2
-  
-  jsonwebtoken v9.0.2
-  
-  morgan v1.10.0
-  
-  mysql2 v3.6.1
-  
-  sequelize v6.33.0
-  
-  uuid v9.0.1
+bcrypt: Usado para cifrar contraseñas de usuarios de forma segura.
+
+express: Un marco de aplicación web de Node.js para el desarrollo de APIs y aplicaciones web.
+
+jsonwebtoken: Para la autenticación y autorización de usuarios a través de tokens JWT.
+
+morgan: Middleware para registrar solicitudes HTTP en Express.js.
+
+mysql2: Facilita la comunicación con bases de datos MySQL en aplicaciones Node.js.
+
+sequelize: Un ORM para Node.js que simplifica la interacción con bases de datos relacionales.
+
+uuid: Para la generación y manipulación de identificadores únicos (UUIDs) en la aplicación.
 
 Instalar las dependencias con:
 
