@@ -1,7 +1,23 @@
 const { Op } = require("sequelize");
 const Users = require("../model/users.model");
 
+/**
+ * @class
+ * @classdesc Controlador de usuarios.
+ */
+
 class UserController {
+
+    /**
+     * Obtiene todos los usuarios.
+     * @function
+     * @async
+     *
+     * @param {object} req - Objeto de solicitud HTTP.
+     * @param {object} res - Objeto de respuesta HTTP.
+     *
+     * @returns {JSON} Respuesta JSON que contiene una lista de todos los usuarios.
+     */
 
     async getAllUsers(req, res) {
         const users = await Users.findAll();
@@ -11,6 +27,17 @@ class UserController {
             body: users
         })
     };
+
+    /**
+     * Obtiene un usuario por su ID.
+     * @function
+     * @async
+     *
+     * @param {object} req - Objeto de solicitud HTTP que contiene el ID del usuario.
+     * @param {object} res - Objeto de respuesta HTTP.
+     *
+     * @returns {JSON} Respuesta JSON que contiene la información del usuario encontrado.
+     */
 
     async getUserById(req, res) {
         const id = req.params.id;
@@ -25,6 +52,18 @@ class UserController {
             body: user,
         });
     };
+        /**
+     * Crea un nuevo usuario.
+     * @function
+     * @async
+     *
+     * @param {object} req - Objeto de solicitud HTTP que contiene los datos del nuevo usuario.
+     * @param {object} res - Objeto de respuesta HTTP.
+     *
+     * @returns {JSON} Respuesta JSON que indica si el usuario se ha creado con éxito.
+     *
+     * @throws {JSON} Respuesta JSON con un mensaje de error si el usuario ya existe con el mismo correo electrónico o nombre de usuario.
+     */
 
     async createUser(req, res) {
         const dataUsers = req.body;
@@ -61,6 +100,17 @@ class UserController {
         });
     }
 
+    /**
+     * Actualiza un usuario por su ID.
+     * @function
+     * @async
+     *
+     * @param {object} req - Objeto de solicitud HTTP que contiene el ID del usuario y los datos a actualizar.
+     * @param {object} res - Objeto de respuesta HTTP.
+     *
+     * @returns {JSON} Respuesta JSON que indica si el usuario se ha actualizado con éxito.
+     */
+
     async updateUsersByYd(req, res) {
         const id = req.params.id;
         const dataProducts = req.body;
@@ -83,7 +133,16 @@ class UserController {
         });
     }
 
-
+    /**
+     * Elimina un usuario por su ID.
+     * @function
+     * @async
+     *
+     * @param {object} req - Objeto de solicitud HTTP que contiene el ID del usuario a eliminar.
+     * @param {object} res - Objeto de respuesta HTTP.
+     *
+     * @returns {JSON} Respuesta JSON que indica si el usuario se ha eliminado con éxito.
+     */
 
     async deleteUserById(req, res) {
         const id = req.params.id;

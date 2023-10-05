@@ -1,7 +1,21 @@
 const Purchase = require('../../model/purchase.model');
 const Product = require('../../model/product.model');
 
-async function purchaseFinder(purchaseId) {
+/**
+ * @function
+ * @async
+ * @name purchaseFinder
+ * @description Encuentra y formatea una compra en función de su ID.
+ *
+ * @param {string} purchaseId - El ID de la compra que se busca y formatea.
+ *
+ * @returns {object} Objeto que representa la compra formateada.
+ *
+ * @throws {Error} Error si no se encuentra la compra o si ocurre un error en la búsqueda o el formato.
+
+ */
+
+const purchaseFinder = async(purchaseId) => {
     const purchaseResponse = await Purchase.findAll({
         where: {
             Purchase_Id: purchaseId,
@@ -30,6 +44,7 @@ async function purchaseFinder(purchaseId) {
         productos: productsList,
         precioTotal: purchaseTotalPrice
     }
+    return purchaseAsFactura
 };
 
-module.exports = purchaseFinder;
+module.exports = { purchaseFinder }

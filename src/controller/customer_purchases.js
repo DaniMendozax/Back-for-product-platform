@@ -2,14 +2,26 @@ const { v4: uuidv4 } = require('uuid');
 const Purchase = require('../model/purchase.model');
 const Product = require('../model/product.model');
 const Users = require('../model/users.model');
-const purchaseFinder = require('./utilities/purchaseFinder');
+const { purchaseFinder } = require('./utilities/purchaseFinder');
+
+/**
+ * @class
+ * @classdesc Controlador de compras de clientes.
+ */
 
 class CustomerPurchase {
 
-    /**
-     * Obtiene un una compra por numero de Id.
+  /**
+     * Crea una compra.
+     * @function
+     * @async
+     *
      * @param {object} req - Objeto de solicitud HTTP.
      * @param {object} res - Objeto de respuesta HTTP.
+     *
+     * @returns {JSON} Respuesta JSON que indica el resultado de la creación de la compra.
+     *
+     * @throws {JSON} Respuesta JSON con un mensaje de error si la petición no es correcta.
      */
     async createPurchase(req, res) {
         const dataPurchase = req.body;
@@ -42,44 +54,65 @@ class CustomerPurchase {
         };
     };
 
-    /**
-     * Obtiene un una compra por numero de Id.
+   /**
+     * Obtiene una compra por número de ID.
+     * @function
+     * @async
+     *
      * @param {object} req - Objeto de solicitud HTTP.
      * @param {object} res - Objeto de respuesta HTTP.
+     *
+     * @returns {JSON} Respuesta JSON que contiene la compra encontrada.
+     *
+     * @throws {JSON} Respuesta JSON con un mensaje de error si la compra no fue encontrada con el ID proporcionado.
+     * ```
      */
     async getPurchaseById(req, res) {
         const purchaseId = req.params.purchaseId;
-        const purchaseResponse = await Purchase.findAll({
-            where: {
-                Purchase_Id: purchaseId,
-            },
-        });
-        if(purchaseResponse) {
-            res.status(200).json({
+        const purchaseAsFactura = await purchaseFinder(purchaseId);
+        try {
+            await res.status(200).json({
                 ok: true,
                 status: 200,
                 body: purchaseAsFactura
             });
-        } else {
+        } catch{
             res.status(400).json({
                 message: 'La compra no fue encontrada con ese id'
             })
         }
     }
 
-        /**
-     * Obtiene un una compra por numero de Id.
+
+    /**
+     * Obtiene todas las compras.
+     * @function
+     * @async
+     *
      * @param {object} req - Objeto de solicitud HTTP.
      * @param {object} res - Objeto de respuesta HTTP.
+     *
+     * @returns {JSON} Respuesta JSON que contiene todas las compras encontradas en la base de datos.
+     *
+     * @throws {JSON} Respuesta JSON con un mensaje de error si no se encontraron compras en la base de datos.
      */
     async getAllPurchases(req, res) {
         const purchaseResponse = await Purchase.findAll();
+
         if(purchaseResponse && purchaseResponse.length > 0) {
-            
+            const getPurchasIds = purchaseResponse.map((item) => {
+                return item.dataValues.Purchase_Id
+            })
+            const filteredIDs = Array.from(new Set(getPurchasIds));
+            const allPurchases = await Promise.all(filteredIDs.map(async item => {
+                const purchaseItem = await purchaseFinder(item);
+                return purchaseItem
+            }))
+
             res.status(200).json({
                 ok: true,
                 status: 200,
-                body: groupedPurchases
+                body: allPurchases
             });
         } else {
             res.status(404).json({

@@ -3,8 +3,26 @@ const jwt = require('jsonwebtoken');
 const keys = require('../config/keys');
 const bcrypt = require('bcrypt');
 
+/**
+ * @class
+ * @classdesc Controlador de autenticación de usuarios.
+ */
+
 class LoginController {
 
+     /**
+     * Autentica a un usuario y emite un token de acceso si las credenciales son válidas.
+     * @function
+     * @async
+     *
+     * @param {object} req - Objeto de solicitud HTTP que contiene las credenciales del usuario.
+     * @param {object} res - Objeto de respuesta HTTP.
+     *
+     * @returns {JSON} Respuesta JSON con un mensaje de éxito y un token de acceso si la autenticación es exitosa.
+     *
+     * @throws {JSON} Respuesta JSON con un mensaje de error si las credenciales son incorrectas o si el usuario no se encuentra.
+
+     */
     async postLogin(req, res) {
         const dataLogin = req.body;
 
